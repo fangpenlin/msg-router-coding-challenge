@@ -250,13 +250,38 @@ def test_invalid_json_body(app, payload):
 
 
 @pytest.mark.parametrize('payload,expected_msg', [
-    ({}, 'is a required property'),
-    ({'message': ''}, 'is a required property'),
-    ({'message': '', 'recipients': []}, 'is too short'),
-    ({'message': '', 'recipients': ['a', 'a']}, 'has non-unique elements'),
+    (
+        {},
+        'is a required property',
+    ),
+    (
+        {'message': ''},
+        'is a required property',
+    ),
+    (
+        {'message': '', 'recipients': []},
+        'is too short',
+    ),
+    (
+        {'message': '', 'recipients': ['a', 'a']},
+        'has non-unique elements',
+    ),
+    (
+        {'message': '', 'recipients': ['a', 'a', 123]},
+        (
+            'has non-unique elements',
+            "123 is not of type u'string'",
+        ),
+    ),
 ])
 def test_invalid_json_schema(app, payload, expected_msg):
     resp = app.post_json('/route-msg', payload, status=400)
     body = resp.text
     assert 'Invalid JSON schema' in body
-    assert expected_msg in body
+    if isinstance(expected_msg, tuple):
+        for msg in expected_msg:
+            assert msg in body
+    else:
+        assert expected_msg in body
+    for error in resp.json['error']['info']:
+        assert error['message'] in body
