@@ -237,3 +237,26 @@ def test_bad_cidr(bad_subnet_app):
 def test_bad_phone_numbers(app, payload, expected):
     resp = app.post_json('/route-msg', payload, status=400)
     assert resp.json == expected
+
+
+@pytest.mark.parametrize('payload', [
+    '',
+    'foobar',
+    "{'bad_json': True}",
+])
+def test_invalid_json_body(app, payload):
+    resp = app.post('/route-msg', payload, status=400)
+    assert 'Invalid JSON body' in resp.text
+
+
+@pytest.mark.parametrize('payload,expected_msg', [
+    ({}, 'is a required property'),
+    ({'message': ''}, 'is a required property'),
+    ({'message': '', 'recipients': []}, 'is too short'),
+    ({'message': '', 'recipients': ['a', 'a']}, 'has non-unique elements'),
+])
+def test_invalid_json_schema(app, payload, expected_msg):
+    resp = app.post_json('/route-msg', payload, status=400)
+    body = resp.text
+    assert 'Invalid JSON schema' in body
+    assert expected_msg in body
