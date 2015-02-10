@@ -27,5 +27,5 @@ def error_view(exc, request):
     if status is None:
         status = DEFAULT_EXC_STATUS
     resp.status_code = status
-    resp.content_type = 'application/json'
+    resp.content_type = b'application/json'
     return resp
