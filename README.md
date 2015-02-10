@@ -63,3 +63,15 @@ curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "", "recipie
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "", "recipients": ["a", "a"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "", "recipients": ["a", "a", 123]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
 ```
+
+## Deployment
+
+I use Docker + AWS Elastic Beanstalk for deployment, for more details, you can read my article - [Running Docker with AWS Elastic Beanstalk](http://victorlin.me/posts/2014/11/26/running-docker-with-aws-elastic-beanstalk).
+
+You need to install Docker in your host first, then you need to run `eb init` to create an application and the environment. It's dead simple to deploy, modify `Dockerrun.aws.json` to the new version number, commit and tag current version number. And here you run
+
+```
+make && make push && eb deploy
+```
+
+`make` command builds the Docker image here, and `make push` push it to Docker registry. Finally, `eb deploy` deploy current version defined in `Dockerrun.aws.json` to the environment associated with current branch.
