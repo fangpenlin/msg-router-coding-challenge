@@ -1,7 +1,7 @@
 {
   "AWSEBDockerrunVersion": "1",
   "Image": {
-    "Name": "victorlin/victorlin/msg-router:0.1.0",
+    "Name": "victorlin/msg-router:0.1.0",
     "Update": "true"
   },
   "Ports": [
