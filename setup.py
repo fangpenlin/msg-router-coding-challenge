@@ -4,6 +4,12 @@ use_setuptools()
 from setuptools import setup, find_packages
 
 version = '0.0.0'
+try:
+    import msg_router
+    version = msg_router.__version__
+except ImportError:
+    pass
+
 tests_require = [
     'mock',
     'webtest',
