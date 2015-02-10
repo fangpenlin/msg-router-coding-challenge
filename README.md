@@ -74,4 +74,4 @@ You need to install Docker in your host first, then you need to run `eb init` to
 make && make push && eb deploy
 ```
 
-`make` command builds the Docker image here, and `make push` push it to Docker registry. Finally, `eb deploy` deploy current version defined in `Dockerrun.aws.json` to the environment associated with current branch.
+`make` command builds the Docker image here, and `make push` push it to the Docker registry. Finally, `eb deploy` deploy current version defined in `Dockerrun.aws.json` to the environment associated with current branch.
