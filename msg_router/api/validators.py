@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
+import functools
 
 from jsonschema import Draft4Validator
 
 from ..utils import PhoneNumberValidator
 from ..exceptions import ExceptionBase
+from .base import ControllerBase
 
 
 class InvalidJSONSchema(ExceptionBase):
@@ -71,3 +73,28 @@ def validate_phone_numbers(phone_numbers):
                 bad_numbers=bad_recipients,
             ),
         )
+
+
+def validate_with(validators):
+    """Decorate a given function to be validated with validators
+
+    """
+    def decorator(func):
+        @functools.wraps()
+        def wrapper(*args, **kwargs):
+            # the decorated method is a member method of ControllerBase,
+            # let's get its request from its attribute
+            if (
+                hasattr(func, '__self__') and
+                func.__self__ and
+                isinstance(func.__self__, ControllerBase)
+            ):
+                request = func.__self__.request
+            elif 'request' in kwargs:
+                request = kwargs['request']
+            else:
+                request = args[0]
+            # TODO: we can actually
+            for validator in validators:
+                validator(request)
+    return decorator
