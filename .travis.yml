@@ -9,6 +9,6 @@ install:
   - 'pip install -e .[tests]'
 # command to run tests
 script: 
-  - 'py.tests -sv'
+  - 'py.test -sv tests'
   - 'pip install flake8 --use-mirrors'
   - 'flake8 msg_router --ignore=E501,W293'
