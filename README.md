@@ -51,4 +51,9 @@ curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "SendHub Roc
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "Whatsup", "recipients": ["+15555555551", "+15555555552", "+15555555553", "+15555555554", "+15555555555", "+15555555556", "+15555555557", "+15555555558"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "YOLO!", "recipients": ["+15555555551", "+15555555552", "+15555555553", "+15555555554"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "YOLO!", "recipients": ["+15555555551", "+155555555", "abcd", "123456789", ""]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
+curl -X POST -v -H 'Content-Type: application/json' -d '{}' http://msg-router-prod.elasticbeanstalk.com/route-msg
+curl -X POST -v -H 'Content-Type: application/json' -d '{"message": ""}' http://msg-router-prod.elasticbeanstalk.com/route-msg
+curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "", "recipients": []}' http://msg-router-prod.elasticbeanstalk.com/route-msg
+curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "", "recipients": ["a", "a"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
+curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "", "recipients": ["a", "a", 123]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
 ```
