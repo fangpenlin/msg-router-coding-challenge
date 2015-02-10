@@ -183,6 +183,32 @@ bad_number_cases = [
     _bad_case,
 ]
 
+invalid_json_schema_cases = [
+    (
+        {},
+        'is a required property',
+    ),
+    (
+        {'message': ''},
+        'is a required property',
+    ),
+    (
+        {'message': '', 'recipients': []},
+        'is too short',
+    ),
+    (
+        {'message': '', 'recipients': ['a', 'a']},
+        'has non-unique elements',
+    ),
+    (
+        {'message': '', 'recipients': ['a', 'a', 123]},
+        (
+            'has non-unique elements',
+            "123 is not of type u'string'",
+        ),
+    ),
+]
+
 
 @pytest.fixture
 def app(app_settings=None):
@@ -263,31 +289,7 @@ def test_invalid_content_type(app):
     assert 'Invalid Content-Type' in resp.text
 
 
-@pytest.mark.parametrize('payload,expected_msg', [
-    (
-        {},
-        'is a required property',
-    ),
-    (
-        {'message': ''},
-        'is a required property',
-    ),
-    (
-        {'message': '', 'recipients': []},
-        'is too short',
-    ),
-    (
-        {'message': '', 'recipients': ['a', 'a']},
-        'has non-unique elements',
-    ),
-    (
-        {'message': '', 'recipients': ['a', 'a', 123]},
-        (
-            'has non-unique elements',
-            "123 is not of type u'string'",
-        ),
-    ),
-])
+@pytest.mark.parametrize('payload,expected_msg', invalid_json_schema_cases)
 def test_invalid_json_schema(app, payload, expected_msg):
     resp = app.post_json('/route-msg', payload, status=400)
     body = resp.text

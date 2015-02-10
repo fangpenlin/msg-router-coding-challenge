@@ -8,6 +8,7 @@ import itertools
 from tests.integration.test_api import routing_cases
 from tests.integration.test_api import round_robin_cases
 from tests.integration.test_api import bad_number_cases
+from tests.integration.test_api import invalid_json_schema_cases
 
 
 def main():
@@ -16,6 +17,7 @@ def main():
         routing_cases,
         round_robin_cases,
         bad_number_cases,
+        invalid_json_schema_cases,
     ):
         abs_url = urlparse.urljoin(target_url, '/route-msg')
         print (
