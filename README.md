@@ -93,3 +93,11 @@ O(4) = O(1)
 ```
 
 It's a constant time `O(1)` algorithm.
+
+### Algorithm category
+
+Greedy.
+
+### Other throughput values
+
+For this given case, any given value has no better solution than the biggest one we found, that's why we can use greedy. But for other cases, like 1, 3, 4. Given value 6, if we use greedy, 4 will be found first, the result will be 4, 1, 1. But for 3, 3 is actually a better solution. In this case, we need to use Dynamic Programming to solve the problem. 
