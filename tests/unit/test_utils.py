@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 
 import pytest
 
-from msg_router.models.phone_numbers import Validator
+from msg_router.utils import PhoneNumberValidator
 
 
 phone_number_validation_cases = [
@@ -26,10 +26,10 @@ phone_number_validation_cases = [
 
 
 @pytest.fixture
-def validator():
-    return Validator()
+def phone_number_validator():
+    return PhoneNumberValidator()
 
 
 @pytest.mark.parametrize('value,expected', phone_number_validation_cases)
-def test_phone_number_validation(validator, value, expected):
-    assert validator(value) == expected
+def test_phone_number_validation(phone_number_validator, value, expected):
+    assert phone_number_validator(value) == expected

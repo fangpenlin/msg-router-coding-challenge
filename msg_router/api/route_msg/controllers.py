@@ -4,14 +4,23 @@ import itertools
 from netaddr import IPNetwork
 from pyramid.view import view_config
 from pyramid.view import view_defaults
+from pyramid.httpexceptions import HTTPBadRequest
 
 from ... import models
+from ...utils import PhoneNumberValidator
+from ...exceptions import ExceptionBase
 from ..base import ControllerBase
 from .resources import RouteMessageResource
 
 
+class InvalidPhoneNumber(ExceptionBase):
+    code = 'invalid-phone-number'
+
+
 @view_defaults(context=RouteMessageResource, renderer='json')
 class RouteMessageController(ControllerBase):
+
+    phone_number_validator = PhoneNumberValidator()
 
     @view_config(request_method='POST')
     def post(self):
@@ -35,7 +44,23 @@ class RouteMessageController(ControllerBase):
 
         message = self.request.json['message']
         recipients = self.request.json['recipients']
-        # TODO: validate recipients
+
+        bad_recipients = []
+        for phone_number in recipients:
+            if not self.phone_number_validator(phone_number):
+                bad_recipients.append(phone_number)
+        if bad_recipients:
+            bad_numbers_str = ', '.join(map(
+                lambda num: '"{}"'.format(num),
+                bad_recipients
+            ))
+            msg = 'Invalid phone numbers {}'.format(bad_numbers_str)
+            raise InvalidPhoneNumber(
+                message=msg,
+                info=dict(
+                    bad_numbers=bad_recipients,
+                ),
+            )
 
         # use cachier algorithm to solve the problem
         cashier = models.Cashier(throughputs)

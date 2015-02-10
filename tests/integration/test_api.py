@@ -137,6 +137,37 @@ _round_robin_case = (
     }
 )
 
+_bad_case = (
+    # input
+    {
+        'message': 'YOLO!',
+        'recipients': [
+            '+15555555551',
+            '+155555555',
+            'abcd',
+            '123456789',
+            '',
+        ],
+    },
+    # output
+    {
+        'error': {
+            'code': 'invalid-phone-number',
+            'message': (
+                'Invalid phone numbers "+155555555", "abcd", "123456789", ""'
+            ),
+            'info': {
+                'bad_numbers': [
+                    '+155555555',
+                    'abcd',
+                    '123456789',
+                    '',
+                ],
+            },
+        },
+    }
+)
+
 
 routing_cases = [
     _routing_case1,
@@ -146,6 +177,10 @@ routing_cases = [
 
 round_robin_cases = [
     _round_robin_case,
+]
+
+bad_number_cases = [
+    _bad_case,
 ]
 
 
@@ -186,13 +221,19 @@ def test_api(app, payload, expected):
 
 
 @pytest.mark.parametrize('payload,expected', round_robin_cases)
-def test_api_ip_round_robin_dispatch(small_subnet_app, payload, expected):
+def test_ip_round_robin_dispatch(small_subnet_app, payload, expected):
     return test_api(small_subnet_app, payload, expected)
 
 
-def test_api_with_bad_cidr(bad_subnet_app):
+def test_bad_cidr(bad_subnet_app):
     with pytest.raises(ValueError):
         bad_subnet_app.post_json('/route-msg', {
             'message': 'SendHub Rocks',
             'recipients': ['+15555555556'],
         })
+
+
+@pytest.mark.parametrize('payload,expected', bad_number_cases)
+def test_bad_phone_numbers(app, payload, expected):
+    resp = app.post_json('/route-msg', payload, status=400)
+    assert resp.json == expected

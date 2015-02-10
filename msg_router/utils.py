@@ -2,7 +2,7 @@ from __future__ import unicode_literals
 import re
 
 
-class Validator(object):
+class PhoneNumberValidator(object):
     """Validator tries to normalize the given phone number, validates it, then
     return the normalized format
 
