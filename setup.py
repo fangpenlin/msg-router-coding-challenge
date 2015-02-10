@@ -19,6 +19,7 @@ setup(
     install_requires=[
         'pyramid>=1.5,<1.6',
         'netaddr>=0.7,<0.8',
+        'jsonschema>=2.4,<2.5',
     ],
     extras_require=dict(
         tests=tests_require,

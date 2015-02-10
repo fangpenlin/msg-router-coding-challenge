@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
 import itertools
 
+from jsonschema import validate
+from jsonschema import ValidationError
 from netaddr import IPNetwork
 from pyramid.view import view_config
 from pyramid.view import view_defaults
@@ -10,6 +12,37 @@ from ...utils import PhoneNumberValidator
 from ...exceptions import ExceptionBase
 from ..base import ControllerBase
 from .resources import RouteMessageResource
+
+
+JSON_SCHEMA = {
+    'title': 'SendHub Challenge Schema',
+    'type': 'object',
+    'properties': {
+        'message': {
+            'type': 'string',
+        },
+        'recipients': {
+            'type': 'array',
+            'minItems': 1,
+            'items': {
+                'type': 'string',
+            },
+            'uniqueItems': True,
+        }
+    },
+    'required': [
+        'message',
+        'recipients',
+    ]
+}
+
+
+class InvalidJSONBody(ExceptionBase):
+    code = 'invalid-json-body'
+
+
+class InvalidJSONSchema(ExceptionBase):
+    code = 'invalid-json-schema'
 
 
 class InvalidPhoneNumber(ExceptionBase):
@@ -41,8 +74,21 @@ class RouteMessageController(ControllerBase):
                 )
             throughput_to_ip_geneator[throughput] = itertools.cycle(ip_pool)
 
-        message = self.request.json['message']
-        recipients = self.request.json['recipients']
+        try:
+            validate(self.request.json, JSON_SCHEMA)
+            message = self.request.json['message']
+            recipients = self.request.json['recipients']
+        except ValueError:
+            raise InvalidJSONBody(
+                message='Invalid JSON body {!r}'.format(self.request.text),
+                info=dict(
+                    body=self.request.text,
+                ),
+            )
+        except ValidationError as exc:
+            raise InvalidJSONSchema(
+                message='Invalid JSON schema: {}'.format(exc.message),
+            )
 
         bad_recipients = []
         for phone_number in recipients:
