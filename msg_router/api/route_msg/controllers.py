@@ -27,6 +27,10 @@ class RouteMessageController(ControllerBase):
             # the pool of ip addresses in the cidr
             # except broadcasting address, the .0 one
             ip_pool = list(IPNetwork(cidr))[1:]
+            if not len(ip_pool):
+                raise ValueError(
+                    'Invalid CIDR {} has zero host in it'.format(cidr)
+                )
             throughput_to_ip_geneator[throughput] = itertools.cycle(ip_pool)
 
         message = self.request.json['message']
