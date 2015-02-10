@@ -4,6 +4,8 @@ import os
 env = os.environ
 
 default_settings = {
+    'api.version_header_value': 'msg_router:__version__',
+    'api.revision_header_value': 'msg_router:__git_revision__',
     'routing.table': eval(
         env.get(
             'ROUTING_TABLE',

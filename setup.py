@@ -25,4 +25,8 @@ setup(
         tests=tests_require,
     ),
     tests_require=tests_require,
+    entry_points="""\
+    [paste.app_factory]
+    main = msg_router:main
+    """
 )
