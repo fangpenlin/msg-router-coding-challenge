@@ -1,8 +1,7 @@
 from __future__ import unicode_literals
 import itertools
 
-from jsonschema import validate
-from jsonschema import ValidationError
+from jsonschema import Draft4Validator
 from netaddr import IPNetwork
 from pyramid.view import view_config
 from pyramid.view import view_defaults
@@ -74,8 +73,23 @@ class RouteMessageController(ControllerBase):
                 )
             throughput_to_ip_geneator[throughput] = itertools.cycle(ip_pool)
 
+        validator = Draft4Validator(JSON_SCHEMA)
         try:
-            validate(self.request.json, JSON_SCHEMA)
+            errors = list(validator.iter_errors(self.request.json))
+            if errors:
+                error_msg = ', '.join(error.message for error in errors)
+                error_info = []
+                for error in errors:
+                    error_info.append(dict(
+                        message=error.message,
+                        path=list(error.path),
+                        schema_path=list(error.schema_path),
+                    ))
+                raise InvalidJSONSchema(
+                    message='Invalid JSON schema: {}'.format(error_msg),
+                    info=error_info,
+                )
+
             message = self.request.json['message']
             recipients = self.request.json['recipients']
         except ValueError:
@@ -84,10 +98,6 @@ class RouteMessageController(ControllerBase):
                 info=dict(
                     body=self.request.text,
                 ),
-            )
-        except ValidationError as exc:
-            raise InvalidJSONSchema(
-                message='Invalid JSON schema: {}'.format(exc.message),
             )
 
         bad_recipients = []
