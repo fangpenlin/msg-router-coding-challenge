@@ -4,7 +4,6 @@ import itertools
 from netaddr import IPNetwork
 from pyramid.view import view_config
 from pyramid.view import view_defaults
-from pyramid.httpexceptions import HTTPBadRequest
 
 from ... import models
 from ...utils import PhoneNumberValidator
