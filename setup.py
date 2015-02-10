@@ -15,7 +15,7 @@ setup(
     version=version,
     packages=find_packages(),
     install_requires=[
-        'pyramid>=1.5,>1.6'
+        'pyramid>=1.5,<1.6'
         'netaddr>=0.7,<0.8'
     ],
     extras_require=dict(
