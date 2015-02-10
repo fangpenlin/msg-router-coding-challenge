@@ -6,10 +6,11 @@ from pyramid.view import view_config
 from pyramid.view import view_defaults
 
 from ... import models
-from ...exceptions import ExceptionBase
 from ..base import ControllerBase
-from ..validators import validate_json_schema
-from ..validators import validate_phone_numbers
+from ..validators import validate_with
+from ..validators import JSONBodyValidator
+from ..validators import JSONSchemaValidator
+from ..validators import PhoneNumbersValidator
 from .resources import RouteMessageResource
 
 
@@ -36,14 +37,15 @@ JSON_SCHEMA = {
 }
 
 
-class InvalidJSONBody(ExceptionBase):
-    code = 'invalid-json-body'
-
-
 @view_defaults(context=RouteMessageResource, renderer='json')
 class RouteMessageController(ControllerBase):
 
     @view_config(request_method='POST')
+    @validate_with([
+        JSONBodyValidator(),
+        JSONSchemaValidator(JSON_SCHEMA),
+        PhoneNumbersValidator(lambda request: request.json['recipients']),
+    ])
     def post(self):
         routing_table = self.settings['routing.table']
         # map throughput to cidr, like 5 to 10.0.2.0/24
@@ -63,18 +65,8 @@ class RouteMessageController(ControllerBase):
                 )
             throughput_to_ip_geneator[throughput] = itertools.cycle(ip_pool)
 
-        try:
-            validate_json_schema(JSON_SCHEMA, self.request.json)
-            message = self.request.json['message']
-            recipients = self.request.json['recipients']
-        except ValueError:
-            raise InvalidJSONBody(
-                message='Invalid JSON body {!r}'.format(self.request.text),
-                info=dict(
-                    body=self.request.text,
-                ),
-            )
-        validate_phone_numbers(recipients)
+        message = self.request.json['message']
+        recipients = self.request.json['recipients']
 
         # use cachier algorithm to solve the problem
         cashier = models.Cashier(throughputs)

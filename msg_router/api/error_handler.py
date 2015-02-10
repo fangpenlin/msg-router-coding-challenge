@@ -4,7 +4,7 @@ from pyramid.view import view_config
 from pyramid.renderers import render_to_response
 
 from ..exceptions import ExceptionBase
-from .route_msg.controllers import InvalidJSONBody
+from .validators import InvalidJSONBody
 from .validators import InvalidPhoneNumber
 from .validators import InvalidJSONSchema
 

@@ -245,8 +245,22 @@ def test_bad_phone_numbers(app, payload, expected):
     "{'bad_json': True}",
 ])
 def test_invalid_json_body(app, payload):
-    resp = app.post('/route-msg', payload, status=400)
+    resp = app.post(
+        '/route-msg',
+        payload,
+        headers={b'Content-Type': b'application/json'},
+        status=400,
+    )
     assert 'Invalid JSON body' in resp.text
+
+
+def test_invalid_content_type(app):
+    resp = app.post(
+        '/route-msg',
+        '',
+        status=400,
+    )
+    assert 'Invalid Content-Type' in resp.text
 
 
 @pytest.mark.parametrize('payload,expected_msg', [
