@@ -9,6 +9,6 @@ install:
   - 'pip install -e .[tests]'
 # command to run tests
 script: 
-  - 'py.test -sv --cov msg_router tests'
+  - 'py.test -sv --cov-report term-missing --cov msg_router tests'
   - 'pip install flake8 --use-mirrors'
   - 'flake8 msg_router --ignore=E501,W293'
