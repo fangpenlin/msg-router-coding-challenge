@@ -34,13 +34,19 @@ Then, run the acceptance tests
 TEST_ACCEPTANCE=1 py.test -s -vv tests/acceptance
 ```
 
+To test against an URL other than `127.0.0.1:5678`, you can expose the environment variable `TEST_URL`, like this.
+
+```bash
+TEST_URL=http://msg-router-prod.elasticbeanstalk.com/ TEST_ACCEPTANCE=1 py.test -s -vv tests/acceptance
+```
+
 If you prefer to run cURL commands manually, you can use `tests.acceptance.make_curl_cmds` script to generate some commands for you, here you type
 
 ```bash
 python -m tests.acceptance.make_curl_cmds
 ```
 
-To change target URL, you can expose `TEST_URL` in environment.
+Likewise, to change target URL, you can expose `TEST_URL` in environment.
 
 ## Test against the demo server
 
