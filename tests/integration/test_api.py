@@ -170,6 +170,15 @@ def small_subnet_app():
     })
 
 
+@pytest.fixture
+def bad_subnet_app():
+    return app({
+        'routing.table': [
+            (1,  '10.0.1.0/32'),
+        ],
+    })
+
+
 @pytest.mark.parametrize('payload,expected', routing_cases)
 def test_api(app, payload, expected):
     resp = app.post_json('/route-msg', payload)
@@ -178,5 +187,12 @@ def test_api(app, payload, expected):
 
 @pytest.mark.parametrize('payload,expected', round_robin_cases)
 def test_api_ip_round_robin_dispatch(small_subnet_app, payload, expected):
-    resp = small_subnet_app.post_json('/route-msg', payload)
-    assert resp.json == expected
+    return test_api(small_subnet_app, payload, expected)
+
+
+def test_api_with_bad_cidr(bad_subnet_app):
+    with pytest.raises(ValueError):
+        bad_subnet_app.post_json('/route-msg', {
+            'message': 'SendHub Rocks',
+            'recipients': ['+15555555556'],
+        })
