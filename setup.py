@@ -8,6 +8,7 @@ tests_require = [
     'mock',
     'webtest',
     'pytest',
+    'pytest-cov',
 ]
 
 setup(
