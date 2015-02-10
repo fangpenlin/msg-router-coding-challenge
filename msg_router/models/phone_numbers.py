@@ -2,18 +2,15 @@ from __future__ import unicode_literals
 import re
 
 
-class Normalizer(object):
-    """Normalizer normalizes a given phone number into +1XXXXXXXXXX format and
-    return
+class Validator(object):
+    """Validator tries to normalize the given phone number, validates it, then
+    return the normalized format
 
     """
 
-    removable_pattern = re.compile('[\s()-]')
+    annotation_chars_pattern = re.compile('[\s()-./]')
+    phone_number_pattern = re.compile('^(\+)?(1)?[0-9]{10}$')
 
     def __call__(self, phone_number):
-        phone_number = self.removable_pattern.sub('', phone_number)
-        if len(phone_number) == 10:
-            phone_number = ('+1' + phone_number)
-        elif len(phone_number) == 11:
-            phone_number = ('+' + phone_number)
-        return phone_number
+        stripped = self.annotation_chars_pattern.sub('', phone_number)
+        return self.phone_number_pattern.match(stripped) is not None
