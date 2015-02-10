@@ -1,15 +1,15 @@
 from __future__ import unicode_literals
 import itertools
 
-from jsonschema import Draft4Validator
 from netaddr import IPNetwork
 from pyramid.view import view_config
 from pyramid.view import view_defaults
 
 from ... import models
-from ...utils import PhoneNumberValidator
 from ...exceptions import ExceptionBase
 from ..base import ControllerBase
+from ..validators import validate_json_schema
+from ..validators import validate_phone_numbers
 from .resources import RouteMessageResource
 
 
@@ -40,18 +40,8 @@ class InvalidJSONBody(ExceptionBase):
     code = 'invalid-json-body'
 
 
-class InvalidJSONSchema(ExceptionBase):
-    code = 'invalid-json-schema'
-
-
-class InvalidPhoneNumber(ExceptionBase):
-    code = 'invalid-phone-number'
-
-
 @view_defaults(context=RouteMessageResource, renderer='json')
 class RouteMessageController(ControllerBase):
-
-    phone_number_validator = PhoneNumberValidator()
 
     @view_config(request_method='POST')
     def post(self):
@@ -73,23 +63,8 @@ class RouteMessageController(ControllerBase):
                 )
             throughput_to_ip_geneator[throughput] = itertools.cycle(ip_pool)
 
-        validator = Draft4Validator(JSON_SCHEMA)
         try:
-            errors = list(validator.iter_errors(self.request.json))
-            if errors:
-                error_msg = ', '.join(error.message for error in errors)
-                error_info = []
-                for error in errors:
-                    error_info.append(dict(
-                        message=error.message,
-                        path=list(error.path),
-                        schema_path=list(error.schema_path),
-                    ))
-                raise InvalidJSONSchema(
-                    message='Invalid JSON schema: {}'.format(error_msg),
-                    info=error_info,
-                )
-
+            validate_json_schema(JSON_SCHEMA, self.request.json)
             message = self.request.json['message']
             recipients = self.request.json['recipients']
         except ValueError:
@@ -99,23 +74,7 @@ class RouteMessageController(ControllerBase):
                     body=self.request.text,
                 ),
             )
-
-        bad_recipients = []
-        for phone_number in recipients:
-            if not self.phone_number_validator(phone_number):
-                bad_recipients.append(phone_number)
-        if bad_recipients:
-            bad_numbers_str = ', '.join(map(
-                lambda num: '"{}"'.format(num),
-                bad_recipients
-            ))
-            msg = 'Invalid phone numbers {}'.format(bad_numbers_str)
-            raise InvalidPhoneNumber(
-                message=msg,
-                info=dict(
-                    bad_numbers=bad_recipients,
-                ),
-            )
+        validate_phone_numbers(recipients)
 
         # use cachier algorithm to solve the problem
         cashier = models.Cashier(throughputs)

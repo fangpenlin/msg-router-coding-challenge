@@ -5,8 +5,8 @@ from pyramid.renderers import render_to_response
 
 from ..exceptions import ExceptionBase
 from .route_msg.controllers import InvalidJSONBody
-from .route_msg.controllers import InvalidJSONSchema
-from .route_msg.controllers import InvalidPhoneNumber
+from .validators import InvalidPhoneNumber
+from .validators import InvalidJSONSchema
 
 
 # default exception HTTP status to use
