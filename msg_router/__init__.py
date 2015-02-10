@@ -37,6 +37,8 @@ def main(global_config, **settings):
     )
     # provides api views
     config.include('.api')
+    # use our prettify json renderer
+    config.include('.renderers')
 
     config.scan(categories=('pyramid', ))
     return config.make_wsgi_app()

@@ -26,9 +26,9 @@ def test_api(testapp):
             '+15555555551',
         ]
     }
-    resp = testapp.post('/route-msg', payload)
+    resp = testapp.post_json('/route-msg', payload)
     expected_json = {
-        'message': 'SendHubRocks',
+        'message': 'SendHub Rocks',
         'routes': [
             {
                 'ip': '10.0.1.1',
