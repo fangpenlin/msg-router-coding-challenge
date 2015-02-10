@@ -35,6 +35,8 @@ def main(global_config, **settings):
     config = Configurator(
         settings=app_settings,
     )
+    # add api headers
+    config.add_tween('.tweens.api_headers_tween_factory')
     # provides api views
     config.include('.api')
     # use our prettify json renderer
