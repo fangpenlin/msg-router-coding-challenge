@@ -94,21 +94,89 @@ _routing_case2 = (
     }
 )
 
+_round_robin_case = (
+    # input
+    {
+        'message': 'YOLO!',
+        'recipients': [
+            '+15555555551',
+            '+15555555552',
+            '+15555555553',
+            '+15555555554',
+        ],
+    },
+    # output
+    {
+        'message': 'YOLO!',
+        'routes': [
+            {
+                'ip': '10.0.1.1',
+                'recipients': [
+                    '+15555555551',
+                ]
+            },
+            {
+                'ip': '10.0.1.2',
+                'recipients': [
+                    '+15555555552',
+                ]
+            },
+            {
+                'ip': '10.0.1.3',
+                'recipients': [
+                    '+15555555553',
+                ]
+            },
+            {
+                'ip': '10.0.1.1',
+                'recipients': [
+                    '+15555555554',
+                ]
+            },
+        ],
+    }
+)
+
+
 routing_cases = [
     _routing_case1,
     _routing_case2,
 ]
 
 
+round_robin_cases = [
+    _round_robin_case,
+]
+
+
 @pytest.fixture
-def testapp(app_settings=None):
+def app(app_settings=None):
     settings = app_settings or {}
     app = main({}, **settings)
     testapp = TestApp(app)
     return testapp
 
 
+@pytest.fixture
+def small_subnet_app():
+    return app({
+        'routing.table': [
+            # these subnets only have 3 addresses (.0 is excluded)
+            (1,  '10.0.1.0/30'),
+            (5,  '10.0.2.0/30'),
+            (10, '10.0.3.0/30'),
+            (25, '10.0.4.0/30'),
+        ],
+    })
+
+
 @pytest.mark.parametrize('payload,expected', routing_cases)
-def test_api(testapp, payload, expected):
-    resp = testapp.post_json('/route-msg', payload)
+def test_api(app, payload, expected):
+    resp = app.post_json('/route-msg', payload)
+    assert resp.json == expected
+
+
+@pytest.mark.parametrize('payload,expected', round_robin_cases)
+def test_api_ip_round_robin_dispatch(small_subnet_app, payload, expected):
+    resp = small_subnet_app.post_json('/route-msg', payload)
     assert resp.json == expected
