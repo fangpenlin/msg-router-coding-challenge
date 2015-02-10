@@ -75,3 +75,21 @@ make && make push && eb deploy
 ```
 
 `make` command builds the Docker image here, and `make push` push it to the Docker registry. Finally, `eb deploy` deploy current version defined in `Dockerrun.aws.json` to the environment associated with current branch.
+
+## Algorithm
+
+### Analysis
+
+As the given problem is a [Change-making problem](http://en.wikipedia.org/wiki/Change-making_problem). In usual cases, we need to use Dynamic programming to solve the problem, however, given denominations is a special case, so we can solve it with greedy algorithm. The idea is simple, try to make change from the largest denomination as much as possible.
+
+There are 4 denominations in this case, given value N to make change, so we will need to check at most 4 times for each denomination.
+
+### Complexity
+
+For the core cashier algorithm, since it's a constant number 4 we need to check, and the given value doesn't affect how many times we need to calculate, so the complexity
+
+```
+O(4) = O(1)
+```
+
+It's a constant time `O(1)` algorithm.
