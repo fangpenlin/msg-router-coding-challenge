@@ -5,7 +5,7 @@ import pytest
 from msg_router.models.cashier import Cashier
 
 
-coin_change_data = [
+coin_change_cases = [
     (0, {}),
     (1, {1: 1}),
     (50, {25: 2}),
@@ -26,6 +26,6 @@ def cashier():
     return Cashier([1, 5, 10, 25])
 
 
-@pytest.mark.parametrize('value,expected', coin_change_data)
+@pytest.mark.parametrize('value,expected', coin_change_cases)
 def test_coin_change(cashier, value, expected):
     assert cashier(value) == expected
