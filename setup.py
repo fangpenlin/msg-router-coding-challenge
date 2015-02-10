@@ -9,6 +9,7 @@ tests_require = [
     'webtest',
     'pytest',
     'pytest-cov',
+    'pytest-xdist',
 ]
 
 setup(
