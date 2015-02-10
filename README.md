@@ -47,11 +47,6 @@ To change target URL, you can expose `TEST_URL` in environment.
 The demo server is running at `http://msg-router-prod.elasticbeanstalk.com/`, to test against it, you can run following cURL commands:
 
 ```
-curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "SendHub Rocks", "recipients": ["+15555555556", "+15555555555", "+15555555554", "+15555555553", "+15555555552", "+15555555551"]}' http://127.0.0.1:5678/route-msg
-curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "Whatsup", "recipients": ["+15555555551", "+15555555552", "+15555555553", "+15555555554", "+15555555555", "+15555555556", "+15555555557", "+15555555558"]}' http://127.0.0.1:5678/route-msg
-curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "YOLO!", "recipients": ["+15555555551", "+15555555552", "+15555555553", "+15555555554"]}' http://127.0.0.1:5678/route-msg
-curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "YOLO!", "recipients": ["+15555555551", "+155555555", "abcd", "123456789", ""]}' http://127.0.0.1:5678/route-msg
-(.env)[VictorLin@MacBook-Air sendhub-coding-challenge] (master)$ TEST_URL=http://msg-router-prod.elasticbeanstalk.com/ python -m tests.acceptance.make_curl_cmds
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "SendHub Rocks", "recipients": ["+15555555556", "+15555555555", "+15555555554", "+15555555553", "+15555555552", "+15555555551"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "Whatsup", "recipients": ["+15555555551", "+15555555552", "+15555555553", "+15555555554", "+15555555555", "+15555555556", "+15555555557", "+15555555558"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "YOLO!", "recipients": ["+15555555551", "+15555555552", "+15555555553", "+15555555554"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
