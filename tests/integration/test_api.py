@@ -6,7 +6,7 @@ from webtest import TestApp
 from msg_router import main
 
 
-_routing_case_1 = (
+_routing_case1 = (
     # input
     {
         'message': 'SendHub Rocks',
@@ -43,36 +43,51 @@ _routing_case_1 = (
     }
 )
 
-_routing_case_2 = (
+_routing_case2 = (
     # input
     {
-        'message': 'YOLO!',
+        'message': 'Whatsup',
         'recipients': [
-            '+15555555556',
-            '+15555555555',
+            '+15555555551',
+            '+15555555552',
+            '+15555555553',
             '+15555555554',
+            '+15555555555',
+            '+15555555556',
+            '+15555555557',
+            '+15555555558',
         ],
     },
     # output
     {
-        'message': 'YOLO!',
+        'message': 'Whatsup',
         'routes': [
             {
                 'ip': '10.0.1.1',
                 'recipients': [
-                    '+15555555556',
+                    '+15555555551',
                 ]
             },
             {
                 'ip': '10.0.1.2',
                 'recipients': [
-                    '+15555555555',
+                    '+15555555552',
                 ]
             },
             {
                 'ip': '10.0.1.3',
                 'recipients': [
+                    '+15555555553',
+                ]
+            },
+            {
+                'ip': '10.0.2.1',
+                'recipients': [
                     '+15555555554',
+                    '+15555555555',
+                    '+15555555556',
+                    '+15555555557',
+                    '+15555555558',
                 ]
             },
         ],
@@ -80,8 +95,8 @@ _routing_case_2 = (
 )
 
 routing_cases = [
-    _routing_case_1,
-    _routing_case_2,
+    _routing_case1,
+    _routing_case2,
 ]
 
 
