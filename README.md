@@ -8,7 +8,13 @@ To run unit and integrations tests, here you create a virtualenv first
 virtualenv --no-site-packages .env
 ```
 
-then install the project.
+activate the environment
+
+```bash
+source .env/bin/activate
+```
+
+and install the project.
 
 ```bash
 pip install -e .[tests]
