@@ -2,7 +2,7 @@
 
 ## Run unit and integration tests
 
-To run uni and integrations tests, here you create a virtualenv first
+To run unit and integrations tests, here you create a virtualenv first
 
 ```bash
 virtualenv --no-site-packages .env
