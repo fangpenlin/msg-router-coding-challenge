@@ -80,7 +80,7 @@ make && make push && eb deploy
 
 ### Analysis
 
-As the given problem is a [Change-making problem](http://en.wikipedia.org/wiki/Change-making_problem). In usual cases, we need to use Dynamic programming to solve the problem, however, given denominations is a special case, so we can solve it with greedy algorithm. The idea is simple, try to make change from the largest denomination as much as possible.
+As the given problem is a [Change-making problem](http://en.wikipedia.org/wiki/Change-making_problem), in usual cases, we need to use Dynamic programming to solve the problem, however, given denominations is a special case, so we can solve it with greedy algorithm. The idea is simple, try to make change from the largest denomination as much as possible.
 
 There are 4 denominations in this case, given value N to make change, so we will need to check at most 4 times for each denomination.
 
