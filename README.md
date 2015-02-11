@@ -56,7 +56,7 @@ Likewise, to change target URL, you can expose `TEST_URL` in the shell environme
 
 ## Test against the demo server
 
-The demo server is running at `http://msg-router-prod.elasticbeanstalk.com/`, to test against it, you can run following cURL commands:
+The demo server is running at `http://msg-router-prod.elasticbeanstalk.com/`, to run test against it manaually, you can run following cURL commands:
 
 ```
 curl -X POST -v -H 'Content-Type: application/json' -d '{"message": "SendHub Rocks", "recipients": ["+15555555556", "+15555555555", "+15555555554", "+15555555553", "+15555555552", "+15555555551"]}' http://msg-router-prod.elasticbeanstalk.com/route-msg
