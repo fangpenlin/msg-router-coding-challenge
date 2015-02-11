@@ -52,7 +52,7 @@ If you prefer to run cURL commands manually, you can use `tests.acceptance.make_
 python -m tests.acceptance.make_curl_cmds
 ```
 
-Likewise, to change target URL, you can expose `TEST_URL` in environment.
+Likewise, to change target URL, you can expose `TEST_URL` in the shell environment.
 
 ## Test against the demo server
 
